@@ -1,0 +1,14 @@
+{
+	"node": "n8n-nodes-snakk.snakkTrigger",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Communication"],
+	"resources": {
+		"primaryDocumentation": [
+			{
+				"url": "https://doc.snakk.ai/"
+			}
+		]
+	},
+	"alias": ["voice", "call", "webhook", "phone", "ai", "snakk"]
+}

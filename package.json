@@ -1,0 +1,52 @@
+{
+	"name": "n8n-nodes-snakk",
+	"version": "0.1.0",
+	"description": "n8n community node for Snakk.ai - AI voice agent platform. Start outbound calls, manage agents, and handle call webhooks.",
+	"keywords": [
+		"n8n-community-node-package",
+		"n8n",
+		"n8n-node",
+		"snakk",
+		"snakk-ai",
+		"voice-agent",
+		"ai-calling",
+		"outbound-calls"
+	],
+	"license": "MIT",
+	"author": {
+		"name": "Snakk AI",
+		"email": "hello@snakk.ai"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/protrax/n8n-nodes-snakk.git"
+	},
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc && copyfiles -u 1 \"nodes/**/*.svg\" \"nodes/**/*.png\" dist/",
+		"dev": "tsc --watch",
+		"lint": "tsc --noEmit",
+		"prepublishOnly": "npm run build"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"credentials": [
+			"dist/credentials/SnakkApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/Snakk/Snakk.node.js",
+			"dist/nodes/Snakk/SnakkTrigger.node.js"
+		]
+	},
+	"devDependencies": {
+		"@types/node": "^20.0.0",
+		"copyfiles": "^2.4.1",
+		"typescript": "^5.4.0"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
