@@ -1,7 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect width="64" height="64" rx="14" fill="#6366f1"/>
-  <path d="M32 16c-8.837 0-16 6.268-16 14 0 4.42 2.467 8.37 6.32 10.957L20 48l8.5-4.25c1.133.165 2.3.25 3.5.25 8.837 0 16-6.268 16-14S40.837 16 32 16z" fill="#fff"/>
-  <circle cx="24" cy="30" r="3" fill="#6366f1"/>
-  <circle cx="32" cy="30" r="3" fill="#6366f1"/>
-  <circle cx="40" cy="30" r="3" fill="#6366f1"/>
+  <rect width="64" height="64" rx="14" fill="#fff"/>
+  <!-- Large star -->
+  <path d="M30 12 C30 22, 22 22, 12 22 C22 22, 22 30, 22 40 C22 30, 30 30, 40 30 C30 30, 30 22, 30 12Z" fill="#DC2626"/>
+  <!-- Medium star -->
+  <path d="M44 6 C44 12, 40 12, 36 12 C40 12, 40 16, 40 20 C40 16, 44 16, 48 16 C44 16, 44 12, 44 6Z" fill="#DC2626"/>
+  <!-- Small star -->
+  <path d="M48 28 C48 32, 46 32, 44 32 C46 32, 46 34, 46 36 C46 34, 48 34, 50 34 C48 34, 48 32, 48 28Z" fill="#DC2626"/>
+  <!-- SNAKK text -->
+  <text x="8" y="56" font-family="Arial Black,Arial,Helvetica,sans-serif" font-weight="900" font-size="16" fill="#111" letter-spacing="-0.5">SNAKK</text>
 </svg>
