@@ -4,15 +4,13 @@ n8n community node for [Snakk.ai](https://snakk.ai).
 
 ## What is Snakk.ai?
 
-Snakk.ai is a Nordic AI voice agent platform that lets businesses automate phone calls with human-like AI agents. The platform supports Norwegian, Swedish, Danish, and English, and can:
+Snakk.ai is an AI voice agent platform that lets businesses automate phone calls with human-like AI agents. Built in Norway with a strong Nordic focus, but supporting 90+ languages worldwide. Snakk.ai can:
 
 - **Handle inbound calls** — answer customer support, route callers, look up information in real-time
 - **Make outbound calls** — proactive customer contact, appointment reminders, order confirmations, follow-ups
-- **Extract structured data** — automatically pull key information from conversations (customer satisfied? questions answered?)
+- **Extract structured data** — automatically pull key information from conversations
 - **Record and summarize** — GDPR-compliant recording with AI-generated call summaries
 - **Integrate via webhooks and tools** — the AI agent can call external APIs mid-conversation and receive results when calls end
-
-Snakk.ai is built for the Nordics and optimized for Nordic languages and business use cases.
 
 ## What this node does
 
@@ -24,25 +22,27 @@ Perform operations on the Snakk.ai platform from any workflow:
 
 | Resource | Operation | Description |
 |----------|-----------|-------------|
-| **Call** | Start Dynamic Call | Call a number with a custom AI agent built on-the-fly. Full control over instructions, voice, language, recording, webhooks, and dynamic variables. |
-| **Call** | Start Call (Existing Agent) | Call a number using a pre-configured agent from your Snakk.ai dashboard. |
-| **Call** | Get Call | Get details for a specific call (transcript, duration, status, recording). |
-| **Call** | List Calls | List all calls for your account. |
-| **Agent** | Create Agent | Create a new persistent voice agent. |
-| **Agent** | Get Agent | Get details for a specific agent. |
-| **Agent** | List Agents | List all agents on your account. |
-| **Agent** | Update Agent | Update an existing agent's configuration. |
-| **Agent** | Delete Agent | Delete an agent. |
+| **Call** | Start Dynamic Call | Call a number with a custom AI agent built on-the-fly |
+| **Call** | Start Call (Existing Agent) | Call using a pre-configured agent from your dashboard |
+| **Call** | Get Call | Get call details including transcript, duration, and status |
+| **Call** | List Calls | List all calls for your account |
+| **Agent** | Create Agent | Create a new voice agent |
+| **Agent** | Get Agent | Get agent details and configuration |
+| **Agent** | List Agents | List all agents on your account |
+| **Agent** | Update Agent | Update an agent's configuration |
+| **Agent** | Duplicate Agent | Copy an agent with all its settings |
+| **Agent** | Delete Agent | Delete an agent |
+| **Phone Number** | List My Numbers | See your assigned phone numbers |
+| **Phone Number** | List Available | See numbers available to claim |
+| **Phone Number** | Claim / Assign / Unassign / Release | Manage phone number assignments |
 
 **Key features:**
-- **Dynamic Variables** — pass custom data (`{"name": "Kari", "orderId": "12345"}`) and reference them in prompts with `{{name}}`, `{{orderId}}`
-- **6 AI voices** — Marin, Ash, Coral, Sage, Alloy, Echo
-- **4 languages** — Norwegian, English, Swedish, Danish
-- **Structured output** — define a JSON schema and the AI extracts structured data from the conversation
+- **Dynamic Variables** — pass custom data and personalize every call with `{{variables}}`
+- **Structured output** — define a JSON schema and let the AI extract structured data from conversations
 - **Webhooks** — receive call results when calls end, including transcripts and summaries
-- **Recording** — GDPR-compliant with consent prompt, or silent recording
+- **GDPR-compliant recording** — with consent prompt or silent recording
 - **Transfer to human** — let the AI agent hand off to a real person when needed
-- **Usable as AI tool** — the node has `usableAsTool: true`, so it works with n8n's AI Agent node
+- **Usable as AI tool** — works with n8n's AI Agent node for autonomous workflows
 
 ### Snakk.ai Trigger (Webhook Node)
 
@@ -50,11 +50,9 @@ Starts a workflow automatically when a Snakk.ai event occurs:
 
 | Event | Description |
 |-------|-------------|
-| **Call Ended** | Fires when a call finishes. Payload includes transcript, duration, status, call summary, and dynamic variables. |
-| **Structured Output Ready** | Fires when AI-extracted structured data is available. |
-| **Any Event** | Catch-all for any webhook payload from Snakk.ai. |
-
-Use this to build reactive workflows — for example, write call results back to a CRM, send follow-up emails, or update a ticket.
+| **Call Ended** | Fires when a call finishes — includes transcript, duration, status, and summary |
+| **Structured Output Ready** | Fires when AI-extracted structured data is available |
+| **Any Event** | Catch-all for any webhook payload from Snakk.ai |
 
 ## Installation
 
@@ -79,7 +77,6 @@ npm install n8n-nodes-snakk
 2. Go to your dashboard and create an API key
 3. In n8n, go to **Credentials → New → Snakk.ai API**
 4. Paste your API key
-5. (Optional) Change the Base URL if you're using a custom deployment
 
 The credential includes a built-in connection test that verifies your API key works.
 
@@ -99,7 +96,7 @@ When a new lead is created in your CRM, Snakk.ai automatically calls them with a
 [Snakk.ai Trigger: Call Ended] → [CRM: Create History Note]
 ```
 
-When a call ends, write the AI-generated summary, transcript, and structured data (customer satisfied? understood the solution?) back to the CRM record.
+When a call ends, write the AI-generated summary and structured data back to the CRM record.
 
 ### Appointment reminder with fallback
 
@@ -107,7 +104,7 @@ When a call ends, write the AI-generated summary, transcript, and structured dat
 [Schedule Trigger] → [CRM: Get Tomorrow's Appointments] → [Snakk.ai: Start Dynamic Call]
 ```
 
-Every evening, call customers to remind them of tomorrow's appointments. If they don't answer, a follow-up workflow sends an email or SMS.
+Call customers to remind them of upcoming appointments. If they don't answer, trigger a follow-up email or SMS.
 
 ### Invoice follow-up
 
@@ -119,9 +116,9 @@ Automatically call customers with overdue invoices using a polite payment remind
 
 ## Dynamic Variables
 
-Dynamic variables let you personalize every call. Pass data as JSON and reference it in your instructions:
+Personalize every call by passing data as JSON and referencing it in your agent's instructions:
 
-**Variables input:**
+**Variables:**
 ```json
 {
   "name": "Kari Hansen",
@@ -135,7 +132,7 @@ Dynamic variables let you personalize every call. Pass data as JSON and referenc
 Hei {{name}}! Vi ringer for å bekrefte ordre {{orderNumber}} på {{amount}}.
 ```
 
-Snakk.ai uses LiquidJS for templates, so you can also use conditionals and date formatting:
+Snakk.ai uses LiquidJS templates, so conditionals and formatting are supported:
 ```
 {% if customerTier == "premium" %}Takk for at du er premium-kunde!{% endif %}
 ```
@@ -146,25 +143,24 @@ Snakk.ai uses LiquidJS for templates, so you can also use conditionals and date 
 git clone https://github.com/Snakk-ai/n8n-nodes-snakk.git
 cd n8n-nodes-snakk
 npm install
-npm run build    # compile TypeScript
+npm run build
 npm run dev      # watch mode
 ```
 
-To test locally, link the package to your n8n instance:
+To test locally:
 
 ```bash
-npm run build
-npm link
-cd ~/.n8n/custom  # or ~/.n8n/nodes
+npm run build && npm link
+cd ~/.n8n/custom
 npm link n8n-nodes-snakk
 # Restart n8n
 ```
 
 ## Links
 
-- [Snakk.ai website](https://snakk.ai)
-- [Snakk.ai API documentation](https://doc.snakk.ai/)
-- [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
+- [Snakk.ai](https://snakk.ai)
+- [API documentation](https://doc.snakk.ai/)
+- [n8n community nodes](https://docs.n8n.io/integrations/community-nodes/)
 
 ## License
 
