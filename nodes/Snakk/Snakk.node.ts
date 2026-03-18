@@ -37,8 +37,9 @@ export class Snakk implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
-					{ name: 'Call', value: 'call' },
 					{ name: 'Agent', value: 'agent' },
+					{ name: 'Call', value: 'call' },
+					{ name: 'Phone Number', value: 'phoneNumber' },
 				],
 				default: 'call',
 			},
@@ -380,18 +381,38 @@ export class Snakk implements INodeType {
 				},
 			},
 			{
-				displayName: 'Dynamic Variables (JSON)',
-				name: 'dynamicVariablesExisting',
-				type: 'json',
-				default: '',
-				placeholder: '{"name": "Kari"}',
-				description: 'Custom variables for template personalization',
+				displayName: 'Existing Agent Call Options',
+				name: 'existingCallOptions',
+				type: 'collection',
+				placeholder: 'Add Option',
+				default: {},
 				displayOptions: {
 					show: { resource: ['call'], operation: ['startExisting'] },
 				},
-				routing: {
-					send: { type: 'body', property: 'dynamicVariables' },
-				},
+				options: [
+					{
+						displayName: 'From Number',
+						name: 'fromNumber',
+						type: 'string',
+						default: '',
+						placeholder: '+4787654321',
+						description: 'Specific number to call from (must be assigned to your account). If not set, uses the agent\'s assigned number.',
+						routing: {
+							send: { type: 'body', property: 'fromNumber' },
+						},
+					},
+					{
+						displayName: 'Dynamic Variables (JSON)',
+						name: 'dynamicVariables',
+						type: 'json',
+						default: '',
+						placeholder: '{"name": "Kari"}',
+						description: 'Custom variables for template personalization in the agent\'s prompts',
+						routing: {
+							send: { type: 'body', property: 'dynamicVariables' },
+						},
+					},
+				],
 			},
 
 			// ══════════════════════════════════════════════════════════
@@ -423,6 +444,18 @@ export class Snakk implements INodeType {
 						request: {
 							method: 'DELETE',
 							url: '=/api/agents/{{$parameter.agentIdOp}}',
+						},
+					},
+				},
+				{
+					name: 'Duplicate Agent',
+					value: 'duplicate',
+					action: 'Duplicate an existing agent',
+					description: 'Create a copy of an existing agent with all its settings',
+					routing: {
+						request: {
+							method: 'POST',
+							url: '=/api/agents/{{$parameter.agentIdOp}}/duplicate',
 						},
 					},
 				},
@@ -473,7 +506,7 @@ export class Snakk implements INodeType {
 				placeholder: 'agent-uuid-here',
 				description: 'UUID of the agent',
 				displayOptions: {
-					show: { resource: ['agent'], operation: ['get', 'update', 'delete'] },
+					show: { resource: ['agent'], operation: ['get', 'update', 'delete', 'duplicate'] },
 				},
 			},
 
@@ -715,6 +748,124 @@ export class Snakk implements INodeType {
 						},
 					},
 				],
+			},
+
+			// ══════════════════════════════════════════════════════════
+			//  PHONE NUMBER operations
+			// ══════════════════════════════════════════════════════════
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: { show: { resource: ['phoneNumber'] } },
+				options: [
+					{
+						name: 'List My Numbers',
+						value: 'list',
+						action: 'List your phone numbers',
+						description: 'Get all phone numbers assigned to your account',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '/api/phone-numbers',
+							},
+						},
+					},
+					{
+						name: 'List Available Numbers',
+						value: 'listAvailable',
+						action: 'List available numbers to claim',
+						description: 'See which phone numbers are available in the pool',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '/api/phone-numbers/available',
+							},
+						},
+					},
+					{
+						name: 'Claim Number',
+						value: 'claim',
+						action: 'Claim a number from pool',
+						description: 'Claim an available phone number for your account',
+						routing: {
+							request: {
+								method: 'POST',
+								url: '/api/phone-numbers/claim',
+							},
+						},
+					},
+					{
+						name: 'Assign to Agent',
+						value: 'assign',
+						action: 'Assign number to agent',
+						description: 'Assign a phone number to a specific agent for inbound calls',
+						routing: {
+							request: {
+								method: 'POST',
+								url: '/api/phone-numbers/assign',
+							},
+						},
+					},
+					{
+						name: 'Unassign from Agent',
+						value: 'unassign',
+						action: 'Unassign number from agent',
+						description: 'Remove the agent assignment from a phone number',
+						routing: {
+							request: {
+								method: 'POST',
+								url: '/api/phone-numbers/unassign',
+							},
+						},
+					},
+					{
+						name: 'Release Number',
+						value: 'release',
+						action: 'Release number back to pool',
+						description: 'Release a phone number back to the available pool',
+						routing: {
+							request: {
+								method: 'POST',
+								url: '/api/phone-numbers/release',
+							},
+						},
+					},
+				],
+				default: 'list',
+			},
+
+			// ── Phone Number fields ──────────────────────────────────
+			{
+				displayName: 'Phone Number',
+				name: 'phoneNumberValue',
+				type: 'string',
+				required: true,
+				default: '',
+				placeholder: '+4712345678',
+				description: 'The phone number in E.164 format',
+				displayOptions: {
+					show: { resource: ['phoneNumber'], operation: ['claim', 'assign', 'unassign', 'release'] },
+				},
+				routing: {
+					send: { type: 'body', property: 'phoneNumber' },
+				},
+			},
+			{
+				displayName: 'Agent ID',
+				name: 'phoneAgentId',
+				type: 'string',
+				required: true,
+				default: '',
+				placeholder: 'agent-uuid-here',
+				description: 'UUID of the agent to assign/unassign the number to',
+				displayOptions: {
+					show: { resource: ['phoneNumber'], operation: ['assign', 'unassign'] },
+				},
+				routing: {
+					send: { type: 'body', property: 'agentId' },
+				},
 			},
 		],
 	};
