@@ -77,18 +77,30 @@ export class Snakk implements INodeType {
 							},
 						},
 					},
-					{
-						name: 'List Calls',
-						value: 'list',
-						action: 'List all calls',
-						description: 'Get a list of all calls for your account',
-						routing: {
-							request: {
-								method: 'GET',
-								url: '/api/calls',
-							},
+				{
+					name: 'Get Call',
+					value: 'get',
+					action: 'Get a specific call',
+					description: 'Get details for a specific call including transcript and status',
+					routing: {
+						request: {
+							method: 'GET',
+							url: '=/api/calls/{{$parameter.callId}}',
 						},
 					},
+				},
+				{
+					name: 'List Calls',
+					value: 'list',
+					action: 'List all calls',
+					description: 'Get a list of all calls for your account',
+					routing: {
+						request: {
+							method: 'GET',
+							url: '/api/calls',
+						},
+					},
+				},
 				],
 				default: 'startDynamic',
 			},
@@ -322,6 +334,20 @@ export class Snakk implements INodeType {
 				},
 			},
 
+			// ── Get Call fields ───────────────────────────────────────
+			{
+				displayName: 'Call ID',
+				name: 'callId',
+				type: 'string',
+				required: true,
+				default: '',
+				placeholder: 'call-uuid-here',
+				description: 'UUID of the call to retrieve',
+				displayOptions: {
+					show: { resource: ['call'], operation: ['get'] },
+				},
+			},
+
 			// ── Start Existing Agent Call fields ──────────────────────
 			{
 				displayName: 'To Number',
@@ -378,30 +404,187 @@ export class Snakk implements INodeType {
 				noDataExpression: true,
 				displayOptions: { show: { resource: ['agent'] } },
 				options: [
+				{
+					name: 'Create Agent',
+					value: 'create',
+					action: 'Create a new agent',
+					routing: {
+						request: {
+							method: 'POST',
+							url: '/api/agents',
+						},
+					},
+				},
+				{
+					name: 'Delete Agent',
+					value: 'delete',
+					action: 'Delete an agent',
+					routing: {
+						request: {
+							method: 'DELETE',
+							url: '=/api/agents/{{$parameter.agentIdOp}}',
+						},
+					},
+				},
+				{
+					name: 'Get Agent',
+					value: 'get',
+					action: 'Get a specific agent',
+					routing: {
+						request: {
+							method: 'GET',
+							url: '=/api/agents/{{$parameter.agentIdOp}}',
+						},
+					},
+				},
+				{
+					name: 'List Agents',
+					value: 'list',
+					action: 'List all agents',
+					routing: {
+						request: {
+							method: 'GET',
+							url: '/api/agents',
+						},
+					},
+				},
+				{
+					name: 'Update Agent',
+					value: 'update',
+					action: 'Update an existing agent',
+					routing: {
+						request: {
+							method: 'PUT',
+							url: '=/api/agents/{{$parameter.agentIdOp}}',
+						},
+					},
+				},
+			],
+			default: 'list',
+			},
+
+			// ── Agent ID field (for get, update, delete) ────────────
+			{
+				displayName: 'Agent ID',
+				name: 'agentIdOp',
+				type: 'string',
+				required: true,
+				default: '',
+				placeholder: 'agent-uuid-here',
+				description: 'UUID of the agent',
+				displayOptions: {
+					show: { resource: ['agent'], operation: ['get', 'update', 'delete'] },
+				},
+			},
+
+			// ── Update Agent fields ──────────────────────────────────
+			{
+				displayName: 'Update Fields',
+				name: 'updateFields',
+				type: 'collection',
+				placeholder: 'Add Field',
+				default: {},
+				displayOptions: {
+					show: { resource: ['agent'], operation: ['update'] },
+				},
+				options: [
 					{
-						name: 'List Agents',
-						value: 'list',
-						action: 'List all agents',
+						displayName: 'Name',
+						name: 'name',
+						type: 'string',
+						default: '',
 						routing: {
-							request: {
-								method: 'GET',
-								url: '/api/agents',
-							},
+							send: { type: 'body', property: 'name' },
 						},
 					},
 					{
-						name: 'Create Agent',
-						value: 'create',
-						action: 'Create a new agent',
+						displayName: 'Instructions',
+						name: 'instructions',
+						type: 'string',
+						typeOptions: { rows: 6 },
+						default: '',
 						routing: {
-							request: {
-								method: 'POST',
-								url: '/api/agents',
-							},
+							send: { type: 'body', property: 'instructions' },
+						},
+					},
+					{
+						displayName: 'Description',
+						name: 'description',
+						type: 'string',
+						default: '',
+						routing: {
+							send: { type: 'body', property: 'description' },
+						},
+					},
+					{
+						displayName: 'Voice',
+						name: 'voice',
+						type: 'options',
+						options: [
+							{ name: 'Marin', value: 'marin' },
+							{ name: 'Ash', value: 'ash' },
+							{ name: 'Coral', value: 'coral' },
+							{ name: 'Sage', value: 'sage' },
+							{ name: 'Alloy', value: 'alloy' },
+							{ name: 'Echo', value: 'echo' },
+						],
+						default: 'marin',
+						routing: {
+							send: { type: 'body', property: 'voice' },
+						},
+					},
+					{
+						displayName: 'Language',
+						name: 'language',
+						type: 'options',
+						options: [
+							{ name: 'Norwegian', value: 'no' },
+							{ name: 'English', value: 'en' },
+							{ name: 'Swedish', value: 'sv' },
+							{ name: 'Danish', value: 'da' },
+						],
+						default: 'no',
+						routing: {
+							send: { type: 'body', property: 'language' },
+						},
+					},
+					{
+						displayName: 'Greeting Message',
+						name: 'greetingMessage',
+						type: 'string',
+						default: '',
+						routing: {
+							send: { type: 'body', property: 'greeting_message' },
+						},
+					},
+					{
+						displayName: 'Recording Enabled',
+						name: 'recordingEnabled',
+						type: 'boolean',
+						default: true,
+						routing: {
+							send: { type: 'body', property: 'recording_enabled' },
+						},
+					},
+					{
+						displayName: 'Transfer Enabled',
+						name: 'transferEnabled',
+						type: 'boolean',
+						default: false,
+						routing: {
+							send: { type: 'body', property: 'transfer_enabled' },
+						},
+					},
+					{
+						displayName: 'Transfer Number',
+						name: 'transferNumber',
+						type: 'string',
+						default: '',
+						routing: {
+							send: { type: 'body', property: 'transfer_number' },
 						},
 					},
 				],
-				default: 'list',
 			},
 
 			// ── Create Agent fields ──────────────────────────────────

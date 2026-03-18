@@ -19,7 +19,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/protrax/n8n-nodes-snakk.git"
+		"url": "git+https://github.com/Snakk-ai/n8n-nodes-snakk.git"
 	},
 	"main": "index.js",
 	"scripts": {
