@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-snakk",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"description": "n8n community node for Snakk.ai - AI voice agent platform. Start outbound calls, manage agents, and handle call webhooks.",
 	"keywords": [
 		"n8n-community-node-package",
@@ -23,7 +23,7 @@
 	},
 	"main": "index.js",
 	"scripts": {
-		"build": "tsc && copyfiles -u 1 \"nodes/**/*.svg\" \"nodes/**/*.png\" dist/",
+		"build": "tsc && copyfiles -u 0 \"nodes/**/*.svg\" \"nodes/**/*.png\" dist/",
 		"dev": "tsc --watch",
 		"lint": "tsc --noEmit",
 		"prepublishOnly": "npm run build"
