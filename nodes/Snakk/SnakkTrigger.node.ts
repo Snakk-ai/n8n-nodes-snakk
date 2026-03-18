@@ -12,7 +12,7 @@ export class SnakkTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Snakk.ai Trigger',
 		name: 'snakkTrigger',
-		icon: 'file:snakk.svg',
+		icon: 'file:snakk.png',
 		group: ['trigger'],
 		version: 1,
 		subtitle: '=on {{$parameter["event"]}}',

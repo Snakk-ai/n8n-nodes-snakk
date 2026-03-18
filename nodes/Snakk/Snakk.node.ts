@@ -5,7 +5,7 @@ export class Snakk implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Snakk.ai',
 		name: 'snakk',
-		icon: 'file:snakk.svg',
+		icon: 'file:snakk.png',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
