@@ -1,7 +1,7 @@
 {
 	"name": "n8n-nodes-snakk",
-	"version": "0.1.4",
-	"description": "n8n community node for Snakk.ai - AI voice agent platform. Start outbound calls, manage agents, and handle call webhooks.",
+	"version": "0.2.0",
+	"description": "n8n community nodes for Snakk.ai: manage voice agents and inbound phone routing, retrieve calls, and receive authenticated call events.",
 	"keywords": [
 		"n8n-community-node-package",
 		"n8n",
@@ -9,8 +9,8 @@
 		"snakk",
 		"snakk-ai",
 		"voice-agent",
-		"ai-calling",
-		"outbound-calls"
+		"inbound-calls",
+		"customer-support"
 	],
 	"license": "MIT",
 	"author": {
@@ -23,13 +23,17 @@
 	},
 	"main": "dist/nodes/Snakk/Snakk.node.js",
 	"scripts": {
-		"build": "tsc && copyfiles -u 0 \"nodes/**/*.svg\" \"nodes/**/*.png\" dist/",
-		"dev": "tsc --watch",
-		"lint": "tsc --noEmit",
-		"prepublishOnly": "npm run build"
+		"build": "n8n-node build",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"typecheck": "tsc --noEmit",
+		"test": "npm run build && node --test tests/*.test.cjs",
+		"release": "n8n-node release"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"docs"
 	],
 	"n8n": {
 		"n8nNodesApiVersion": 1,
@@ -39,14 +43,17 @@
 		"nodes": [
 			"dist/nodes/Snakk/Snakk.node.js",
 			"dist/nodes/Snakk/SnakkTrigger.node.js"
-		]
+		],
+		"strict": true
 	},
 	"devDependencies": {
+		"@n8n/node-cli": "0.46.4",
 		"@types/node": "^20.0.0",
 		"copyfiles": "^2.4.1",
 		"typescript": "^5.4.0"
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"
-	}
+	},
+	"homepage": "https://github.com/Snakk-ai/n8n-nodes-snakk#readme"
 }
