@@ -64,7 +64,7 @@ The trigger verifies the header before producing any workflow data. It acknowled
 
 Do not attach a Respond to Webhook node to this after-call trigger: it already sends its own response. For live tool calls, use the separate synchronous workflow described above. CRM writes after the call should be idempotent per call and action so retries do not create duplicate notes.
 
-The standard after-call payload shape still needs an authenticated end-to-end fixture check before release. The existing filter retains the `status` / `structured_output` behavior from 0.1.4; custom body templates must match the selected event or use Any Event.
+The standard after-call payload shape still needs an authenticated end-to-end fixture check before release. The filter accepts the current dispatcher’s `structured_data` and the legacy `structured_output`, preserving the received field names. Custom body templates must match the selected event or use Any Event.
 
 ## Migration from 0.1.4
 

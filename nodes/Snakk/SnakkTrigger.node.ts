@@ -244,7 +244,7 @@ export class SnakkTrigger implements INodeType {
 				return { noWebhookResponse: true };
 			}
 		} else if (event === 'structuredOutput') {
-			if (!body.structured_output) {
+			if (!body.structured_output && !body.structured_data) {
 				return { noWebhookResponse: true };
 			}
 		}

@@ -283,3 +283,13 @@ test('already deleted callbacks clear local state; real API failures retain it',
 	await assert.rejects(list.methods.checkExists.call(list.ctx));
 	assert.equal(list.requests.length, 1);
 });
+
+// Current dispatch-end-of-call uses structured_data and omits status.
+test('current after-call dispatcher fixture works in both event modes without a status field', async () => {
+ const body = { call_id: 'synthetic-call', summary: 'Synthetic support request', structured_data: { topic: 'support' }, duration_seconds: 42 };
+ for (const event of ['callEnded', 'structuredOutput']) {
+  const r = await deliver({event, body});
+  assert.equal(r.replies[0].code, 200);
+  assert.deepEqual(r.output.workflowData[0][0].json, body);
+ }
+});
