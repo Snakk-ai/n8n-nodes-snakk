@@ -10,5 +10,5 @@
 			}
 		]
 	},
-	"alias": ["voice", "call", "phone", "ai", "agent", "outbound", "snakk"]
+	"alias": ["voice", "call", "phone", "ai", "agent", "inbound", "support", "outbound", "snakk"]
 }
