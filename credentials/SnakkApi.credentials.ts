@@ -6,7 +6,7 @@ import type {
 } from 'n8n-workflow';
 
 export class SnakkApi implements ICredentialType {
-	icon = 'file:../nodes/Snakk/snakk-wordmark.svg' as const;
+	icon = { light: 'file:../nodes/Snakk/snakk-wordmark.svg', dark: 'file:../nodes/Snakk/snakk-wordmark.dark.svg' } as const;
 	name = 'snakkApi';
 	displayName = 'Snakk.ai API';
 	documentationUrl = 'https://doc.snakk.ai/';
